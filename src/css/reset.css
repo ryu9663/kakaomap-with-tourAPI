@@ -1,0 +1,73 @@
+*{box-sizing: border-box;text-decoration: none;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,button{margin:0;padding:0;font-family: Noto Sans;
+    }
+fieldset,img{border:0 none}
+dl,ul,ol,menu,li{list-style:none}
+blockquote, q{quotes: none}
+blockquote:before, blockquote:after,q:before, q:after{content:'';content:none}
+input,select,textarea,button{border-radius:0;vertical-align:middle}
+input::-ms-clear{display:none}
+i,em,address{font-style:normal;}
+button{border:0 none;background-color:transparent;cursor:pointer}
+body{background:#fff;direction:ltr;-webkit-text-size-adjust:none}
+body,th,td,input,select,textarea,button{line-height:1.5;font-family:AppleSDGothicNeo-Regular,'Malgun Gothic','맑은 고딕',dotum,'돋움',sans-serif;color:#222;letter-spacing:-1px}
+a{color:#222;text-decoration:none}
+a:hover{color:#5c26ff;text-decoration:underline}
+a:active{background-color:transparent}
+address,caption,cite,code,dfn,em,var{font-style:normal;font-weight:normal}
+
+
+/* loading */
+.loadingBox {
+    position: relative;
+    bottom:0;
+    
+    margin-top: 400px;
+    margin-left: 100px;
+    
+    
+}
+.loadingBox h1{
+    text-align: center;
+    
+}
+.loadingBox .circle {
+    margin-left: auto;margin-right: auto; 
+    width:40px; height:40px; 
+    border:10px solid #fff; 
+    border-top:10px solid rgb(176, 233, 168); 
+    border-radius:50em; 
+    transition:all .2s;
+    animation-name:spinCircle;
+    animation-duration:.8s;
+    animation-iteration-count:infinite;
+    animation-timing-function:linear;
+}
+
+@keyframes spinCircle {
+    from {
+        transform:translate(-50%, -50%) rotate(0);
+    }
+    to {
+        transform:translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* 카카오맵 */
+.kakao-map,#map{width:100%;height: 420px;}
+.map-searchbar{ 
+    background-color: pink;
+    width: 100%;
+    height: 40px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+}
+/* !지우지말기 */
+*{
+    /* border : 1px gray solid; */
+    /* background:transparent !important; */
+}; 
+.landing {
+    
+    margin-left: 100px;}
