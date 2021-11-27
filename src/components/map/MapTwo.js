@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react"
 import axios from 'axios'
 import { useSelector,shallowEqual, useDispatch } from 'react-redux';
 import { changeLat,changeLon, isLoadingHandler, isShowCreateRoomModalHandler } from "../../redux/actions/actions";
-
+import dotenv from 'dotenv'
+dotenv.config()
 
 
 const MapTwo = () => {
@@ -71,7 +72,7 @@ const MapTwo = () => {
     //! areaBased : 
     // if(count===0){
       setCount(count+1)
-axios.get(`http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey=W%2B9SSMZKirmvzGAhoiAssJvfD9PYntkIlyMO6niTjMi5nwx%2BrUP%2FiQqrLccqOmuxPU2w7iyFQkUC41ddNiePUg%3D%3D`,
+axios.get(`http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey=${process.env.REACT_APP_TOUR_API_KEY}`,
     {
       params:{
       MobileOS:'ETC',
@@ -88,6 +89,7 @@ axios.get(`http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationB
       //*좌표,반경
       mapX:pickPoint[1],
       mapY:pickPoint[0],
+      //! 반경 몇m??
       radius:10000,
       //* 
       arrange:'A',
@@ -231,7 +233,7 @@ console.log('도착')
 
 // ?  좌표를 주소로 변환 -> 버튼 클릭시 onClick이벤트를 통해 91번줄로 이동
 axios.get(`https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${latlng.getLng()}&y=${latlng.getLat()}&input_coord=WGS84`
-  ,{headers:{Authorization:`KakaoAK 0d621f08c3fcfce13829ef5a842acbdb`}}
+  ,{headers:{Authorization:`KakaoAK ${process.env.REACT_APP_REST_API}`}}
   )
   .then(res=>res.data.documents[0].address)
   .then((address)=>{
