@@ -18,6 +18,7 @@ export const CURRENT_ID = "CURRENT_ID";
 export const IS_LOGIN_ALERT ="IS_LOGIN_ALERT";
 export const MEETING_PLACE_HANDLER = "MEETING_PLACE_HANDLER";
 export const CURRENT_USER_LIST_HANDLER = "CURRENT_USER_LIST_HANDLER";
+export const CHANGE_PLACE_LIST = "CHANGE_PLACE_LIST";
 
 export function isLoginHandler (boolean) {
     return {
@@ -176,5 +177,11 @@ export function isCurrentUserListHandler (arr) {
     return {
         type: CURRENT_USER_LIST_HANDLER,
         payload: arr
+    }
+}
+export function changePlaceList(arr) {
+    return {
+        type : CHANGE_PLACE_LIST,
+        payload : arr
     }
 }

@@ -3,6 +3,7 @@ import {
   CHANGE_ADD,
   CHANGE_CITY,
   CHANGE_REGION,
+  CHANGE_PLACE_LIST,
     IS_LOGIN, 
     IS_LOADING,
     IS_SHOW_LOGIN_MODAL,
@@ -42,7 +43,8 @@ const rootReducer = combineReducers({
     isCurrentIdReducer,
     isLoginAlertReducer,
     meetingPlaceReducer,
-    currentUserListReducer
+    currentUserListReducer,
+    changePlaceListReducer
 })
 
 function isLoginReducer(state = initialState.isLogin, action) {
@@ -212,6 +214,13 @@ function isCurrentIdReducer(state = initialState.isCurrentIdHandler, action){
       case CURRENT_USER_LIST_HANDLER :
         return [...state, ...action.payload]
       default: return state;
+    }
+  }
+  function changePlaceListReducer(state = initialState.placeList,action) {
+    switch (action.type) {
+      case CHANGE_PLACE_LIST :
+        return action.payload
+      default : return state
     }
   }
 

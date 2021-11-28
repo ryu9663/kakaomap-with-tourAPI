@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react"
 import axios from 'axios'
 import { useSelector,shallowEqual, useDispatch } from 'react-redux';
-import { changeLat,changeLon, isLoadingHandler, isShowCreateRoomModalHandler } from "../../redux/actions/actions";
+import { changePlaceList } from "../../redux/actions/actions";
 import dotenv from 'dotenv'
+import notImageYet from '../../images/not-image-yet.png'
 dotenv.config()
 
 
 const MapTwo = () => {
   const [count,setCount] = useState(0)//1번만시작하게함
-  const [placeList,setPlaceList] = useState([])
+  const placeList = useSelector((state=>state.changePlaceListReducer))
+  
   const [pending, setPending] = useState(true)
   const [map, setMap] = useState(null)
   const kakao = window.kakao
@@ -77,7 +79,7 @@ axios.get(`http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationB
       params:{
       MobileOS:'ETC',
       MobileApp:'TourAPI3.0_Guide',
-      numOfRows:30,
+      numOfRows: 50,
       // areaCode:33,
       // sigunguCode:7,
       //! contentTypeId : 12:관광지,14:문화시설,15:행사,25:여행코스,28:레포츠,32:숙박,38:쇼핑,39:식당, 
@@ -97,15 +99,15 @@ axios.get(`http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationB
       }
     }
     ,{'content-type': 'application/json'}).then(res=>{
-      console.log(res.data.response.header)
+      // console.log(res.data.response.header)
       console.log(res.data.response.body.items.item)
       let list = (res.data.response.body.items.item)
       list=list.map(el=>{
-        return [Number(el.mapy),Number(el.mapx),el.title]
+        return [Number(el.mapy),Number(el.mapx),el.title,el.firstimage,el.addr1]
         
       })
-      console.log(list)
-      setPlaceList(list)
+      
+      dispatch(changePlaceList(list))
       
     })
     .catch(err=>console.log(err))
@@ -115,7 +117,7 @@ axios.get(`http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationB
   
 // !
 useEffect(()=>{ // * 위의 useEffect에서 받아온 좌표들을 지도에 노란색 마커로 표시
-  console.log(pickPoint[0],pickPoint[1])
+  
     console.log("effect")
     
     const container = document.getElementById("map") //지도를 담을 영역의 DOM 레퍼런스
@@ -136,6 +138,8 @@ useEffect(()=>{ // * 위의 useEffect에서 받아온 좌표들을 지도에 노
     for(let i = 0;i<placeList.length;i++){
       positions.push(
       {   
+          addr:placeList[i][4],
+          img:placeList[i][3],
           content:placeList[i][2],
           latlng: new kakao.maps.LatLng(placeList[i][0], placeList[i][1])
       })
@@ -171,8 +175,7 @@ useEffect(()=>{ // * 위의 useEffect에서 받아온 좌표들을 지도에 노
           image : markerImage // 마커 이미지 
         })// 마커를 표시할 위치
       
-      //관광지마커의 infowindow
-      // console.log(positions[i])
+      //관광지마커의 infowindow(마우스 올렸을때만)
       let iwContent = `<div style="padding:5px;">${positions[i].content}<br></div>`,
       iwPosition = new kakao.maps.LatLng(positions[i][0],positions[i][1]);
       let infowindow = new kakao.maps.InfoWindow({
@@ -186,21 +189,49 @@ useEffect(()=>{ // * 위의 useEffect에서 받아온 좌표들을 지도에 노
       kakao.maps.event.addListener(marker, 'mouseout', function(){
         infowindow.close();
       })
-  
+      //관광지 마커 클릭하면 정보나오기
+      // ! 여기 홈페이지 주소도 넣어줘야함. 백엔드에 요구하기. 위치기반url에는 홈페이지 응답으로 안준다.
+      let onClickContent = 
+      `<div class="wrap"> 
+                 <div class="info"> 
+                     <div class="title"> 
+                     ${positions[i].content} 
+                         
+                     </div> 
+                     <div class="body"> 
+                         <div class="img">
+                             <img src=${positions[i].img||notImageYet} width="73" height="70">
+                        </div> 
+                         <div class="desc"> 
+                             <div class="ellipsis">${positions[i].addr}</div>               
+                         </div> 
+                     </div> 
+                 </div>    
+            </div>`,iwRemoveable = true;
+      let infowindowOnClick = new kakao.maps.InfoWindow({
+        position : iwPosition, 
+        content : onClickContent,
+        removable : iwRemoveable 
+      });
+
+      kakao.maps.event.addListener(marker, 'click', function(){
+        infowindowOnClick.open(map,marker)
+      })
+
   }
-  
+  // 커스텀 오버레이를 닫기 위해 호출되는 함수입니다 
   
 
   //내위치 마커의 infowindow
   let iwContentCenter = '<div style="padding:5px;">내 위치 <br></div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-  iwPositionCenter = new kakao.maps.LatLng(lat,lon); //인포윈도우 표시 위치입니다
+  iwPositionCenter = new kakao.maps.LatLng(lat,lon),iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다; //인포윈도우 표시 위치입니다
   // 인포윈도우를 생성합니다
   let infowindowCenter = new kakao.maps.InfoWindow({
     position : iwPositionCenter, 
     content : iwContentCenter,
-    // removable : iwRemoveable 
+    removable : iwRemoveable 
   });
-  // iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+  
         
     // marker.setMap(map);
 
@@ -248,17 +279,16 @@ axios.get(`https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${latlng.get
 }, [kakao.maps,placeList,pickPoint])
 
   return (
-    <div>
-      <div>
+    <div className="map-box">
+       
+      <div id="map" ></div>
+      <div className = 'map-rightbar'>
         <input className = 'map-searchbar' type = 'text' value = {place} onChange = {e=>handleSearch(e)} 
         placeholder="상호명이나 지역을 입력하세요"
         onKeyUp ={e=>{if(e.key==='Enter')searchPlace(place)}}
-        >
-          
-        </input>
+        ></input>
         <button onClick = {()=>searchPlace(place)}>검색</button>
-      </div>        
-      <div id="map" ></div>
+      </div> 
     </div>
   )
 }

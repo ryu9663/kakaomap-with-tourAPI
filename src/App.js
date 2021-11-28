@@ -3,11 +3,12 @@ import './css/reset.css';
 import {  useDispatch, useSelector, shallowEqual } from 'react-redux';
 
 
-import Container from "./Component/Container";
+
 import Map from './components/map/Map';
 import MapTwo from './components/map/MapTwo';
 import { changeLat,changeLon, isLoadingHandler} from "./redux/actions/actions";
 import Loading from './Component/Loading';
+import PlaceList from './components/PlaceList';
 
 
 
@@ -36,11 +37,9 @@ function App() {
   return (
     
       <div className="App">
-        {/* <Header /> */}
-        {/* <Container /> */}
         {isLoading ? <Loading /> : <MapTwo />}
-        
-        {/* <DynamicWeb /> */}
+        <hr />
+        <PlaceList />
       </div>
     
   )
