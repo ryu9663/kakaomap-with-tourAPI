@@ -4,7 +4,7 @@ import {  useDispatch, useSelector, shallowEqual } from 'react-redux';
 
 
 
-import Map from './components/map/Map';
+
 import MapTwo from './components/map/MapTwo';
 import { changeLat,changeLon, isLoadingHandler} from "./redux/actions/actions";
 import Loading from './Component/Loading';
