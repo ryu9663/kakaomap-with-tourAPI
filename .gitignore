@@ -12,6 +12,7 @@
 /build
 
 # misc
+package-lock.json
 .DS_Store
 .env
 .pem
@@ -25,4 +26,3 @@ yarn-debug.log*
 yarn-error.log*
 
 localhost*
-package-lock.json
