@@ -25,4 +25,4 @@ yarn-debug.log*
 yarn-error.log*
 
 localhost*
-*package-lock.json
+package-lock.json
